@@ -1,19 +1,16 @@
 package cliente.util;
 
-import javax.swing.*;
-import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.Date;
 
 /**
 * Classe responsável por criar a conexão e enviar os dados para o servidor.
 */
-public class Conexao {
+public class Connection {
     private String host;
-    private Integer port;
-    private Socket client;
+    private int port;
+    private Socket client = null;
 
-    public void connect(String host, Integer port){
+    public void connect(String host, int port){
         this.host = host;
         this.port = port;
 

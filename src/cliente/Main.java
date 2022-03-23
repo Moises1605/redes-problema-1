@@ -1,5 +1,8 @@
 package cliente;
 
+import cliente.model.Cliente;
+import cliente.model.TrashCan;
+
 import javax.swing.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,9 +13,14 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        TrashCan trashCan = new TrashCan(-12.220240948263967,-38.98620457393851,"10.0.0.130", 12345);
+        String message;
         try {
-            Socket cliente = new Socket("10.0.0.130", 12345);
+            trashCan.connect();
+            Socket cliente = trashCan.get_connection().get_client();
             ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
+            message = trashCan.make_request(entrada.toString());
+
             ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
             String mensagem = (String) entrada.readObject();
             System.out.println(mensagem);
@@ -22,8 +30,7 @@ public class Main {
 
                 System.out.println("Conexão estabelecida.");
                 Scanner teclado = new Scanner(System.in);
-                String ordem = teclado.nextLine();
-                saida.writeObject(ordem);
+                saida.writeObject(message);
                 System.out.println("Deseja encerrar a Conexão?");
                 resposta = teclado.nextLine();
 

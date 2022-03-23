@@ -13,22 +13,24 @@ import servidor.api.ApiController;
 public class Main {
 
     public static void main(String[] args) {
+        ApiController api = new ApiController(12345);
+
         try {
             // Instancia o ServerSocket ouvindo a porta 12345
-            ServerSocket servidor = new ServerSocket(12345);
+            api.connect();
+            ServerSocket server = api.get_connection().get_server();
             System.out.println("Servidor ouvindo a porta 12345");
             while(true) {
-                // o método accept() bloqueia a execução até que
-                // o servidor receba um pedido de conexão
-                Socket cliente = servidor.accept();
+                Socket cliente = server.accept();
 
                 System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
                 ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
                 saida.flush();
-                saida.writeObject("Qual a ordem para recolher as lixeiras?");
+                saida.writeObject("dados-lixeira");
 
                 ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
-                System.out.println("A lista de lixeiras é: " + entrada.readObject());
+                System.out.println(api.format_message((String)entrada.readObject()));
+
                 saida.close();
                 entrada.close();
                 cliente.close();
